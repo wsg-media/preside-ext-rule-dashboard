@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form >
+	<tab id="default">
+		<fieldset id="default" sortorder="10">
+			<field name="heading" label="admin.admindashboards.widget.ruleElement:form.heading.label" required="false" />
+            <field name="dashboard_rules" label="admin.admindashboards.widget.ruleElement:form.dashboard_rules.label" control="objectPicker" object="dashboard_rules" multiple="true" default=""/>
+			<field name="graph" label="admin.admindashboards.widget.ruleElement:form.graph.label" control="select" values="line,bar,radar,pie,doughnut" labels="Line,Bar,Radar,Pie,Doughnut" default="bar" />
+		</fieldset>
+	</tab>
+</form>
+
