@@ -1,6 +1,6 @@
 
-function renderGraph(data,graphtype) {
-
+function renderGraph(data,graphtype,id,labels) {
+  var canvas = document.getElementById(id);
   var ctx = canvas.getContext('2d');
 
 
@@ -9,7 +9,7 @@ function renderGraph(data,graphtype) {
   var myChart = new Chart(ctx, {
       type: graphtype,
       data: {
-        labels: [],
+        labels: labels,
           datasets: data
       },
 options: {

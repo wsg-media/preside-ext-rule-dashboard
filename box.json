@@ -1,0 +1,15 @@
+{
+    "type":"preside-extensions",
+    "directory":"application/extensions",
+    "name":"PresideCMS Extension: Dashboard graphs",
+    "slug":"preside-ext-rule-dashboard",
+    "location":"https://github.com/wsg-media/preside-ext-rule-dashboard/archive/v0.9.1.zip",
+    "version":"0.9.1",
+    "dependencies":{
+        "preside-ext-admin-dashboards":"2.0.2"
+    },
+     "repository":{
+        "type":"git",
+        "URL":"https://github.com/wsg-media/preside-ext-rule-dashboard"
+    },   
+}

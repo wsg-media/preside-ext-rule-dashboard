@@ -1,5 +1,7 @@
 <cfscript>
 args.heading=args.heading?:"";
+args.id=args.id?:"";
+args.labels=serialize(args.labels)?:[];
 </cfscript>
 
 <cfif args.heading.len()>
@@ -12,13 +14,16 @@ args.heading=args.heading?:"";
 <cfoutput>
 var data = #args.data#;
 var graphtype = '#args.graphtype#';
+var id = '#args.id#';
+var labels = #args.labels#	
 </cfoutput>
-renderGraph(data,graphtype);
+renderGraph(data,graphtype,id,labels);
 
 </script>
 
-<canvas id="canvas"></canvas>
-
+<cfoutput>
+<canvas id="#args.id#"></canvas>
+</cfoutput>
 
 
 

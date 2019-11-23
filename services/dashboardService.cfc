@@ -1,21 +1,27 @@
-component output=false singleton=true {
-	property name="presideObjectService" inject="presideObjectService";
+/**
+ *
+ * @singleton
+ * @presideservice
+ * @autodoc
+ */
+component output=false{
 	property name="rulesEngineFilterService" inject="rulesEngineFilterService";
 
-
+	public any function init( ) {
+		return this;
+	}
 
 	public boolean function collectData( any logger ) output=false {
-		var haveLogger = StructKeyExists( arguments, "logger" );
-		var canInfo    = haveLogger && arguments.logger.canInfo();
+
+		var canInfo    =  arguments.logger.canInfo();
 
 		if ( canInfo ) { arguments.logger.info( "Executing collectData" ); }
 
 		try {
 
-			var tasks = presideObjectService.selectData(
-				      objectName    = "dashboard_rules"
-					, selectFields  = ["id","condition","crontab_definition","label"]
-					, filter        = "enabled = 1 and ( next_run > CURDATE() OR last_ran IS NULL OR next_run IS NULL )"
+			var tasks = $getPresideObject( "dashboard_rules" ).selectData(
+				      selectFields  = ["id","condition","crontab_definition","label"]
+					, filter        = "enabled = 1 and ( CURDATE() > next_run OR last_ran IS NULL OR next_run IS NULL )"
 			);	
 
 			if ( canInfo && tasks.recordcount == 0 ) { 
@@ -24,9 +30,8 @@ component output=false singleton=true {
 
 			for ( var task in tasks ) {
 
-				var rule = presideObjectService.selectData( 
-							  objectName = "rules_engine_condition"
-							, id         = task.condition 
+				var rule = $getPresideObject( "rules_engine_condition" ).selectData(
+							  id = task.condition 
 					);
 
 				var count = rulesEngineFilterService.getMatchingRecordCount(
@@ -36,17 +41,15 @@ component output=false singleton=true {
 
 				if ( canInfo ) { arguments.logger.info( "#task.label# #count# hits" ); }
 
-				presideObjectService.insertData(
-					  objectName = "dashboard_data"
-					, data       = { 
+				$getPresideObject("dashboard_data").insertData(
+					  data    = { 
 									  rule = task.id
 									, hits = count 			
 								}
 				);	
 
-				presideObjectService.updateData(
-					  objectName = "dashboard_rules"
-					, data       = {   next_run = getNextRunDate( crontab_definition = task.crontab_definition )
+				$getPresideObject("dashboard_rules").updateData(
+					  data       = {   next_run = getNextRunDate( crontab_definition = task.crontab_definition )
 									 , last_ran = now() }
 					, id         = task.id
 				);
@@ -68,6 +71,23 @@ component output=false singleton=true {
 	}
 
 
+	public query function getCondition( required string conditionID ) {
+
+		return var rule = $getPresideObject( "rules_engine_condition" ).selectData(
+					  id = arguments.conditionID
+			);
+	}
+
+	public numeric function executeCondition( required query rule ) {
+
+		return rulesEngineFilterService.getMatchingRecordCount(
+			  objectName      = arguments.rule.filter_object
+			, expressionArray = DeSerializeJson(arguments.rule.expressions)
+		);
+
+	}
+
+
 	public string function getNextRunDate( required string crontab_definition, date lastRun=Now() ) {
 
 		var cronTabExpression = _getCrontabExpressionObject( arguments.crontab_definition );
@@ -75,6 +95,41 @@ component output=false singleton=true {
 
 		return cronTabExpression.nextTimeAfter( lastRunJodaTime  ).toDate();
 	}
+
+	public query function getUserElements( required string user ) {
+
+		return $getPresideObject( "dashboard_element" ).selectData(
+				  filter   = { user = arguments.user }
+				, orderBy  = "ordinalOrder asc"
+		);	
+	}
+
+	public string function addUserElement( 
+		  required string user
+		, required string widgetid
+		, required string instanceid ) {
+
+
+		return $getPresideObject( "dashboard_element" ).insertData(
+				data = { user       = arguments.user 
+					   , widgetid   = arguments.widgetid 
+					   , instanceid = arguments.instanceid }
+		);	
+
+	}
+
+	public void function deleteUserElement( 
+		  required string user
+		, required string widgetid ) {
+
+		$getPresideObject( "dashboard_element" ).deleteData(
+			filter = { widgetid = arguments.widgetid, user = arguments.user }
+		);	
+
+	}
+
+
+
 
 	public query function getWidgets( string widget = "") {
 		var filter = "";
@@ -85,9 +140,8 @@ component output=false singleton=true {
 			filterParams.Append( {id = arguments.widget} );
 		}
 
-		var widgets = presideObjectService.selectData(
-			      objectName    = "dashboard_rules"
-				, selectFields  = ["id","label"]
+		var widgets = $getPresideObject( "dashboard_rules" ).selectData(
+			      selectFields  = ["id","label"]
 				, filter        = filter
 				, filterParams  = filterParams
 		);	
@@ -104,9 +158,8 @@ component output=false singleton=true {
 			filterParams.Append( {rule = arguments.widget} );
 		}
 
-		var widgets = presideObjectService.selectData(
-			      objectName    = "dashboard_data"
-				, selectFields  = ["hits as y","DATE_FORMAT(datecreated, '%M %d %Y') as x"]
+		var widgets = $getPresideObject( "dashboard_data" ).selectData(
+			      selectFields  = ["hits as y","DATE_FORMAT(datecreated, '%M %d %Y') as x"]
 				, filter        = filter
 				, filterParams  = filterParams
 				, orderBy       = "datecreated desc"

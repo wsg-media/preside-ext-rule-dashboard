@@ -17,5 +17,9 @@ component {
 		settings.adminSideBarItems.append( "dashboard" );
 		settings.adminRoles.sysadmin.append( "dashboard.*" );
 
+		settings.enum.StateGraphs = [ "bar","radar","pie","doughnut" ];
+		settings.enum.TimeGraphs = [ "line" ];
+		settings.enum.filterObjects = [ "site_takeover","asset" ];
+
 	}
 }

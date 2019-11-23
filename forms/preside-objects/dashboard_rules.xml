@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<tab id="standard" sortorder="10" >
+		<fieldset id="standard" sortorder="10">
+			<field sortorder="10" binding="dashboard_rules.condition" />
+			<field sortorder="20" binding="dashboard_rules.crontab_definition" />
+			<field sortorder="30" binding="dashboard_rules.enabled" />
+			<field sortorder="40" binding="dashboard_rules.last_ran" />
+			<field sortorder="50" binding="dashboard_rules.next_run" />
+
+			<!--<field name="filterObjects" enum="filterObjects"  />-->
+
+			<field binding="dashboard_rules.filter_condition" control="objectPicker" object="rules_engine_condition" ajax="false" />
+			<!--<field sortorder="60" binding="dashboard_rules.filter_condition" filterBy="filterObjects" filterByField="filter_object"> -->
+		</fieldset>
+	</tab>
+</form>

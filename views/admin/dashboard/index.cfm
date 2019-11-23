@@ -3,6 +3,8 @@
 	event.include( "chart-js" )
 		 .include( "chartdeferred-js" )
 		 .include( "chartcustom-js" );
+
+
 </cfscript>
 
 <cfoutput>
@@ -18,7 +20,7 @@
 
 	#renderAdminDashboard( 
 	      dashboardId = "mainAdminDashboard"
-	    , widgets     = [ "ruleElement","ruleElement" ]
+	    , widgets     = prc.widgets
 	    , columnCount = 2
 	)#
 </cfoutput>

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form >
+<form i18nBaseUri="widget.ruleElement:">
 	<tab id="default">
 		<fieldset id="default" sortorder="10">
-			<field name="heading" label="admin.admindashboards.widget.ruleElement:form.heading.label" required="false" />
-            <field name="dashboard_rules" label="admin.admindashboards.widget.ruleElement:form.dashboard_rules.label" control="objectPicker" object="dashboard_rules" multiple="true" default=""/>
-			<field name="graph" label="admin.admindashboards.widget.ruleElement:form.graph.label" control="select" values="line,bar,radar,pie,doughnut" labels="Line,Bar,Radar,Pie,Doughnut" default="bar" />
+			<field name="heading" required="false" />
+        </fieldset>
+
+        <fieldset id="timeline" sortorder="20">
+            <field name="dashboard_rules" control="objectPicker" object="dashboard_rules" multiple="true" default=""/>
+			<field name="graph" control="enumRadioList" enum="TimeGraphs"  default="line" />
 		</fieldset>
+
+		<fieldset id="state" sortorder="30">
+			<field name="dashboard_conditions"  control="objectPicker" object="rules_engine_condition" ajax="false"  multiple="true" />
+			<field name="condition_graph" control="enumRadioList" enum="StateGraphs"  default="bar" />
+		</fieldset>
+
 	</tab>
 </form>
 
